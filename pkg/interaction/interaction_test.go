@@ -1,9 +1,9 @@
 package interaction
 
 import (
-	"GoDB/internal/pkg/assert"
-	"GoDB/internal/pkg/storage"
 	"bufio"
+	"github.com/MattLaidlaw/GoDB/pkg/assert"
+	"github.com/MattLaidlaw/GoDB/pkg/storage"
 	"strings"
 	"testing"
 )
@@ -16,7 +16,7 @@ func TestEventLoop_NoInput(t *testing.T) {
 
 	EventLoop(m, reader, writer)
 
-	assert.ExpectEq(output.String(), "", t)
+	assert.ExpectEq(output.String(), "> ", t)
 }
 
 func TestEventLoop_EmptyLine(t *testing.T) {
@@ -27,7 +27,7 @@ func TestEventLoop_EmptyLine(t *testing.T) {
 
 	EventLoop(m, reader, writer)
 
-	assert.ExpectEq(output.String(), "empty input\n", t)
+	assert.ExpectEq(output.String(), "> empty input\n> ", t)
 }
 
 func TestEventLoop_Quit(t *testing.T) {
@@ -38,7 +38,7 @@ func TestEventLoop_Quit(t *testing.T) {
 
 	EventLoop(m, reader, writer)
 
-	assert.ExpectEq(output.String(), "", t)
+	assert.ExpectEq(output.String(), "> ", t)
 }
 
 func TestEventLoop(t *testing.T) {
@@ -49,5 +49,5 @@ func TestEventLoop(t *testing.T) {
 
 	EventLoop(m, reader, writer)
 
-	assert.ExpectEq(output.String(), "insertedCount: 1\nvalue\ndeletedCount: 1\n", t)
+	assert.ExpectEq(output.String(), "> insertedCount: 1\n> value\n> deletedCount: 1\n> ", t)
 }

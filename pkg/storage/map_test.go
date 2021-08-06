@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"GoDB/internal/pkg/assert"
+	"github.com/MattLaidlaw/GoDB/pkg/assert"
 	"testing"
 )
 

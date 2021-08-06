@@ -1,8 +1,8 @@
 package parse
 
 import (
-	"GoDB/internal/pkg/storage"
 	"fmt"
+	"github.com/MattLaidlaw/GoDB/pkg/storage"
 	"strconv"
 	"strings"
 )
@@ -30,7 +30,7 @@ func ParseSet(args []string) (Statement, error) {
 	if len(args) < 3 {
 		return nil, fmt.Errorf("expected 3 arguments for SET statement, got %d", len(args))
 	}
-	return &Set {
+	return &Set{
 		Key: args[0],
 		Field: args[1],
 		Value: args[2],
@@ -41,7 +41,7 @@ func ParseGet(args []string) (Statement, error) {
 	if len(args) < 2 {
 		return nil, fmt.Errorf("expected 2 arguments for GET statement, got %d", len(args))
 	}
-	return &Get {
+	return &Get{
 		Key: args[0],
 		Field: args[1],
 	}, nil
@@ -51,7 +51,7 @@ func ParseDel(args []string) (Statement, error) {
 	if len(args) < 2 {
 		return nil, fmt.Errorf("expected 2 arguments for DEL statement, got %d", len(args))
 	}
-	return &Del {
+	return &Del{
 		Key: args[0],
 		Field: args[1],
 	}, nil

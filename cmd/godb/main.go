@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoDB/internal/pkg/interaction"
-	"GoDB/internal/pkg/storage"
 	"bufio"
+	"github.com/MattLaidlaw/GoDB/pkg/interaction"
+	"github.com/MattLaidlaw/GoDB/pkg/storage"
 	"os"
 )
 

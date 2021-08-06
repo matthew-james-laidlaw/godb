@@ -1,16 +1,18 @@
 package interaction
 
 import (
-	"GoDB/internal/pkg/parse"
-	"GoDB/internal/pkg/storage"
 	"bufio"
 	"fmt"
+	"github.com/MattLaidlaw/GoDB/pkg/parse"
+	"github.com/MattLaidlaw/GoDB/pkg/storage"
 	"io"
 )
 
 func EventLoop(store storage.ObjectStore, reader *bufio.Reader, writer *bufio.Writer) {
 	for {
-		fmt.Print("> ")
+		writer.WriteString("> ")
+		writer.Flush()
+
 		line, err := reader.ReadString('\n')
 		if err == io.EOF || line == "q\n" || line[0] == 4 {
 			break
@@ -21,25 +23,13 @@ func EventLoop(store storage.ObjectStore, reader *bufio.Reader, writer *bufio.Wr
 
 		stmt, err := parse.Parse(line)
 		if err != nil {
-			_, err = writer.WriteString(err.Error() + "\n")
-			if err != nil {
-
-			}
-			err = writer.Flush()
-			if err != nil {
-
-			}
+			writer.WriteString(err.Error() + "\n")
+			writer.Flush()
 			continue
 		}
 
 		res := stmt.Execute(store)
-		_, err = writer.WriteString(res + "\n")
-		if err != nil {
-			fmt.Println(err)
-		}
-		err = writer.Flush()
-		if err != nil {
-			fmt.Println(err)
-		}
+		writer.WriteString(res + "\n")
+		writer.Flush()
 	}
 }
