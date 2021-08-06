@@ -10,6 +10,7 @@ import (
 
 func EventLoop(store storage.ObjectStore, reader *bufio.Reader, writer *bufio.Writer) {
 	for {
+		fmt.Print("> ")
 		line, err := reader.ReadString('\n')
 		if err == io.EOF || line == "q\n" || line[0] == 4 {
 			break
@@ -20,7 +21,7 @@ func EventLoop(store storage.ObjectStore, reader *bufio.Reader, writer *bufio.Wr
 
 		stmt, err := parse.Parse(line)
 		if err != nil {
-			_, err = writer.WriteString(err.Error())
+			_, err = writer.WriteString(err.Error() + "\n")
 			if err != nil {
 
 			}
@@ -32,7 +33,7 @@ func EventLoop(store storage.ObjectStore, reader *bufio.Reader, writer *bufio.Wr
 		}
 
 		res := stmt.Execute(store)
-		_, err = writer.WriteString(res)
+		_, err = writer.WriteString(res + "\n")
 		if err != nil {
 			fmt.Println(err)
 		}

@@ -27,7 +27,7 @@ func TestEventLoop_EmptyLine(t *testing.T) {
 
 	EventLoop(m, reader, writer)
 
-	assert.ExpectEq(output.String(), "empty input", t)
+	assert.ExpectEq(output.String(), "empty input\n", t)
 }
 
 func TestEventLoop_Quit(t *testing.T) {
@@ -49,5 +49,5 @@ func TestEventLoop(t *testing.T) {
 
 	EventLoop(m, reader, writer)
 
-	assert.ExpectEq(output.String(), "insertedCount: 1valuedeletedCount: 1", t)
+	assert.ExpectEq(output.String(), "insertedCount: 1\nvalue\ndeletedCount: 1\n", t)
 }
