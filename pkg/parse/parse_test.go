@@ -1,9 +1,9 @@
 package parse
 
 import (
-	"GoDB/internal/pkg/assert"
-	"GoDB/internal/pkg/storage"
 	"fmt"
+	"github.com/MattLaidlaw/GoDB/pkg/assert"
+	"github.com/MattLaidlaw/GoDB/pkg/storage"
 	"testing"
 )
 
