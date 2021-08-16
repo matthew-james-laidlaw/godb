@@ -1,32 +1,27 @@
 package storage
 
 type Map struct {
-	Data map[string]map[string]string
+	store map[string]string
 }
 
 func NewMap() *Map {
-	return &Map{map[string]map[string]string{}}
+	store := make(map[string]string)
+	return &Map{store}
 }
 
-func (m *Map) Set(key string, field string, value string) int {
-	if m.Data == nil {
-		m.Data = map[string]map[string]string{}
-	}
-	if m.Data[key] == nil {
-		m.Data[key] = map[string]string{}
-	}
-	m.Data[key][field] = value
+func (m *Map) Set(k string, v string) int {
+	m.store[k] = v
 	return 1
 }
 
-func (m *Map) Get(key string, field string) (string, bool) {
-	value, ok := m.Data[key][field]
-	return value, ok
+func (m *Map) Get(k string) (string, bool) {
+	v, ok := m.store[k]
+	return v, ok
 }
 
-func (m *Map) Del(key string, field string) int {
-	if _, ok := m.Data[key][field]; ok {
-		delete(m.Data[key], field)
+func (m *Map) Del(k string) int {
+	if _, ok := m.store[k]; ok {
+		delete(m.store, k)
 		return 1
 	}
 	return 0

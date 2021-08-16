@@ -1,98 +1,96 @@
 package parse
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/MattLaidlaw/GoDB/pkg/storage"
-	"strconv"
 	"strings"
 )
 
-func Parse(input string) (Statement, error) {
-	fields := strings.Fields(input)
-
-	if len(fields) < 1 {
-		return nil, fmt.Errorf("empty input")
-	}
-
-	switch fields[0] {
-	case "SET":
-		return ParseSet(fields[1:])
-	case "GET":
-		return ParseGet(fields[1:])
-	case "DEL":
-		return ParseDel(fields[1:])
-	default:
-		return nil, fmt.Errorf("unexpected statement: %v", fields[0])
-	}
-}
-
-func ParseSet(args []string) (Statement, error) {
-	if len(args) < 3 {
-		return nil, fmt.Errorf("expected 3 arguments for SET statement, got %d", len(args))
-	}
-	return &Set{
-		Key: args[0],
-		Field: args[1],
-		Value: args[2],
-	}, nil
-}
-
-func ParseGet(args []string) (Statement, error) {
-	if len(args) < 2 {
-		return nil, fmt.Errorf("expected 2 arguments for GET statement, got %d", len(args))
-	}
-	return &Get{
-		Key: args[0],
-		Field: args[1],
-	}, nil
-}
-
-func ParseDel(args []string) (Statement, error) {
-	if len(args) < 2 {
-		return nil, fmt.Errorf("expected 2 arguments for DEL statement, got %d", len(args))
-	}
-	return &Del{
-		Key: args[0],
-		Field: args[1],
-	}, nil
-}
-
 type Statement interface {
-	Execute(store storage.ObjectStore) string
+	Execute(engine storage.Engine) string
 }
 
 type Set struct {
-	Key string
-	Field string
-	Value string
+	k, v string
 }
 
-func (s *Set) Execute(store storage.ObjectStore) string {
-	insertedCount := store.Set(s.Key, s.Field, s.Value)
-	payload := "insertedCount: " + strconv.Itoa(insertedCount)
-	return payload
+type SetResult struct {
+	InsertedCount int `json:"inserted_count"`
 }
 
 type Get struct {
-	Key string
-	Field string
+	k string
 }
 
-func (g *Get) Execute(store storage.ObjectStore) string {
-	if value, ok := store.Get(g.Key, g.Field); ok {
-		return value
-	}
-	return "item not found"
+type GetResult struct {
+	Found bool `json:"found"`
+	Value string `json:"value"`
 }
 
 type Del struct {
-	Key string
-	Field string
+	k string
 }
 
-func (d *Del) Execute(store storage.ObjectStore) string {
-	if deletedCount := store.Del(d.Key, d.Field); deletedCount > 0 {
-		return "deletedCount: " + strconv.Itoa(deletedCount)
+type DelResult struct {
+	DeletedCount int `json:"deleted_count"`
+}
+
+type Invalid struct {
+	err error
+}
+
+func (cmd *Set) Execute(engine storage.Engine) string {
+	insertedCount := engine.Set(cmd.k, cmd.v)
+	res := &SetResult{insertedCount}
+	str, _ := json.Marshal(&res)
+	return string(str)
+}
+
+func (cmd *Get) Execute(engine storage.Engine) string {
+	v, ok := engine.Get(cmd.k)
+	res := &GetResult{ok, v}
+	str, _ := json.Marshal(&res)
+	return string(str)
+}
+
+func (cmd *Del) Execute(engine storage.Engine) string {
+	deletedCount := engine.Del(cmd.k)
+	res := &DelResult{deletedCount}
+	str, _ := json.Marshal(&res)
+	return string(str)
+}
+
+func (cmd *Invalid) Execute(engine storage.Engine) string {
+	return cmd.err.Error()
+}
+
+func Parse(s string) (Statement, error) {
+	if len(s) <= 1 {
+		return nil, fmt.Errorf("empty input")
 	}
-	return "item not found"
+
+	args := strings.FieldsFunc(s[:len(s)-1], func(r rune) bool {
+		return r == '$'
+	})
+
+	switch args[0] {
+	case "SET":
+		if len(args) < 3 {
+			return nil, fmt.Errorf("expected 2 arguments, got %d", len(args)-1)
+		}
+		return &Set{args[1], args[2]}, nil
+	case "GET":
+		if len(args) < 2 {
+			return nil, fmt.Errorf("expected 1 argument, got %d", len(args)-1)
+		}
+		return &Get{args[1]}, nil
+	case "DEL":
+		if len(args) < 2 {
+			return nil, fmt.Errorf("expected 1 argument, got %d", len(args)-1)
+		}
+		return &Del{args[1]}, nil
+	default:
+	}
+	return nil, fmt.Errorf("invalid input: %s", s)
 }
