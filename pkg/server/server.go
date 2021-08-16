@@ -10,60 +10,56 @@ import (
 )
 
 type Server struct {
-	Port string
-	StorageEngine storage.ObjectStore
+	port string
+	engine storage.Engine
 }
 
-func NewServer(port string, store storage.ObjectStore) *Server {
-	return &Server{port, store}
+func NewServer(port string, engine storage.Engine) *Server {
+	return &Server{port, engine}
 }
 
 func (s *Server) Listen() {
-	// begin listening for TCP connections
-	listener, err := net.Listen("tcp", s.Port)
+	listener, err := net.Listen("tcp", s.port)
 	if err != nil {
-		log.Fatalln("[FATAL] " + err.Error())
+		log.Fatalln(err)
 	}
-	log.Println("[INFO] Server listening on port " + s.Port[1:])
-
-	// spin up goroutines for each new connection
+	log.Println("== server listening on port", s.port[1:])
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Println("[WARN] " + err.Error())
+			log.Fatalln(err)
 		}
-		log.Println("[INFO] Server accepted connection from " + conn.RemoteAddr().String())
+		log.Println("== accepted connection from", conn.RemoteAddr().String())
 		go s.Handle(conn)
 	}
 }
 
 func (s *Server) Handle(conn net.Conn) {
-	reader := bufio.NewReader(conn)
-	writer := bufio.NewWriter(conn)
+	rd := bufio.NewReader(conn)
+	wr := bufio.NewWriter(conn)
+	rw := bufio.NewReadWriter(rd, wr)
 
-	// read-eval-print loop
 	for {
-		line, err := reader.ReadString('\n')
-		if err == io.EOF || line == "q\n" || line[0] == 4 {
-			log.Println("[INFO] EOF received from " + conn.RemoteAddr().String())
+		line, err := rw.ReadString('\n')
+		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			log.Println("[ERROR] " + err.Error())
-			break
+			log.Fatalln(err)
 		}
 
-		stmt, err := parse.Parse(line)
+		stmt, _ := parse.Parse(line)
+		line = stmt.Execute(s.engine) + "\n"
+
+		_, err = rw.WriteString(line)
 		if err != nil {
-			writer.WriteString(err.Error() + "\n")
-			writer.Flush()
-			continue
+			log.Fatalln(err)
 		}
-
-		result := stmt.Execute(s.StorageEngine)
-		writer.WriteString(result + "\n")
-		writer.Flush()
+		err = rw.Flush()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	}
 
-	conn.Close()
+	_ = conn.Close()
 }
