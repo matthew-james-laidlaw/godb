@@ -78,11 +78,6 @@ func TestHandler(t *testing.T) {
 }
 
 func TestServer(t *testing.T) {
-	//storage := NewBasicMap()
-	//srv, err := NewServer(storage)
-	//assert.ExpectEq(err, nil, t)
-	//go srv.Listen()
-
 	client, err := jsonrpc.Dial(Network, Address)
 	assert.ExpectEq(err, nil, t)
 
