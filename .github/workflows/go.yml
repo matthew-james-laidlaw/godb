@@ -7,15 +7,15 @@ on:
 jobs:
 
   runner-job:
+
     runs-on: ubuntu-latest
+
     services:
       godb:
         image: laidlawm/godb:dev
         ports:
         - 6342:6342
 
-  build:
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
 
