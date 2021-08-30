@@ -84,6 +84,7 @@ func TestServer(t *testing.T) {
 	go srv.Listen()
 
 	client, err := jsonrpc.Dial(Network, Address)
+	assert.ExpectEq(err, nil, t)
 
 	setReq := &SetRequest{"key", "val"}
 	setRes := new(SetResult)
