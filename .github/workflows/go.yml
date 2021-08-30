@@ -6,6 +6,14 @@ on:
 
 jobs:
 
+  godb-server:
+    runs-on: ubuntu-latest
+    services:
+      godb:
+        image: laidlawm/godb:dev
+        ports:
+        - 6342:6342
+
   build:
     runs-on: ubuntu-latest
     steps:
