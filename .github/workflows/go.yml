@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  godb-server:
+  runner-job:
     runs-on: ubuntu-latest
     services:
       godb:
