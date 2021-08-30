@@ -9,7 +9,7 @@ import (
 
 const (
 	Network = "tcp"
-	Port = "8080"
+	Port = "6342"
 	Address = ":" + Port
 )
 
