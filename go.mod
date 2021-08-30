@@ -1,3 +1,3 @@
-module github.com/MattLaidlaw/GoDB
+module github.com/MattLaidlaw/godb
 
 go 1.16

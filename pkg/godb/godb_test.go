@@ -1,7 +1,7 @@
 package godb
 
 import (
-	"github.com/MattLaidlaw/GoDB/pkg/assert"
+	"github.com/MattLaidlaw/godb/pkg/assert"
 	"net/rpc/jsonrpc"
 	"testing"
 )

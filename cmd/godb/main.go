@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/MattLaidlaw/GoDB/pkg/godb"
+	"github.com/MattLaidlaw/godb/pkg/godb"
 	"log"
 )
 
