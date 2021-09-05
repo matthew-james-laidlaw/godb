@@ -1,3 +1,7 @@
-module github.com/MattLaidlaw/godb
+module godb
 
-go 1.16
+go 1.17
+
+require (
+	github.com/MattLaidlaw/go-assert v1.0.0
+)
