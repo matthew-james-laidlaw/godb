@@ -29,5 +29,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: devlatest
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: laidlawm/godb:dev
