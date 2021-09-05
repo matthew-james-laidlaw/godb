@@ -29,5 +29,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: dev
+          tags: devlatest
           labels: ${{ steps.meta.outputs.labels }}
