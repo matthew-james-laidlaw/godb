@@ -1,4 +1,4 @@
-name: Build and test Go application
+name: Build, publish, and test Go application
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 jobs:
 
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Publish Docker dev image
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -33,7 +33,7 @@ jobs:
           tags: laidlawm/godb:dev
 
   runner-job:
-
+    name: Build and test Go application
     runs-on: ubuntu-latest
 
     services:
