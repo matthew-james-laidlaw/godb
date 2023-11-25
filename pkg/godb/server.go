@@ -1,12 +1,13 @@
 package godb
 
 import (
-	"github.com/MattLaidlaw/go-jsonrpc2"
 	"log"
+
+	"github.com/MattLaidlaw/go-jsonrpc2"
 )
 
 const (
-	Port = "6342"
+	Port    = "6342"
 	Address = "localhost:" + Port
 )
 
@@ -19,7 +20,7 @@ type Server struct {
 // The NewServer method creates a Server object, encapsulating a StorageEngine implementation. Before returning a
 // Server, this method registers an RPC method handler with the RPC DefaultServer.
 func NewServer() *Server {
-	s := &Server {
+	s := &Server{
 		rpc: jsonrpc2.NewServer(),
 	}
 	s.rpc.Register(Handler{})
@@ -32,5 +33,3 @@ func (s *Server) Listen() {
 		log.Fatalln(err)
 	}
 }
-
-

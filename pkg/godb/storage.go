@@ -14,7 +14,6 @@ type Engine interface {
 	// The Del method attempts to delete a key-value pair in the underlying storage engine. If that pair exists, it is
 	// deleted and a deleted-count of 1 is returned. Otherwise, nothing is deleted and a count of 0 is returned.
 	Del(key string) float64
-
 }
 
 // The BasicMap type implements the Engine interface backed by a standard Golang map[KeyType]ValType

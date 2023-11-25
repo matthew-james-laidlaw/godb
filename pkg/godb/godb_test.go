@@ -1,9 +1,10 @@
 package godb
 
 import (
+	"testing"
+
 	"github.com/MattLaidlaw/go-assert"
 	"github.com/MattLaidlaw/go-jsonrpc2"
-	"testing"
 )
 
 func TestMap_SetKeyValue(t *testing.T) {

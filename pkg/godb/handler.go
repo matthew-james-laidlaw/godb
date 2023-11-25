@@ -3,7 +3,7 @@ package godb
 var gStorage Engine = NewBasicMap()
 
 // The Handler type abstracts StorageEngine methods for use with the JSON RPC protocol.
-type Handler struct {}
+type Handler struct{}
 
 func NewHandler() *Handler {
 	return &Handler{}
