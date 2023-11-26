@@ -12,6 +12,14 @@ go build ./cmd/server
 ./server
 ```
 
+## Testing The Server And Client Code
+```
+git clone https://github.com/MattLaidlaw/godb
+cd ./godb
+go build -v ./...
+go test -v ./...
+```
+
 ## Running The Server Via Docker
 ```
 git clone https://github.com/MattLaidlaw/godb
