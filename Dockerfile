@@ -1,7 +1,7 @@
-FROM golang:1.17-alpine
-WORKDIR /app
+FROM golang:1.21
+WORKDIR /godb
 COPY . ./
-RUN go build ./cmd/godb
+RUN go build ./cmd/server
 ENV PORT=6342
 EXPOSE $PORT
-CMD ["./godb"]
+CMD ["./server"]

@@ -1,35 +1,72 @@
 package godb
 
 import (
+	"encoding/json"
 	"log"
-
-	"github.com/MattLaidlaw/go-jsonrpc2"
+	"net"
 )
 
-const (
-	Port    = "6342"
-	Address = "localhost:" + Port
-)
-
-// The Server type wraps an RPC method handler and provides a light abstraction on top of a JSON RPC server for handling
-// concurrent connections.
 type Server struct {
-	rpc *jsonrpc2.Server
+	storage *StorageEngine
 }
 
-// The NewServer method creates a Server object, encapsulating a StorageEngine implementation. Before returning a
-// Server, this method registers an RPC method handler with the RPC DefaultServer.
 func NewServer() *Server {
-	s := &Server{
-		rpc: jsonrpc2.NewServer(),
-	}
-	s.rpc.Register(Handler{})
-	return s
+	return &Server{storage: NewStorageEngine()}
 }
 
-func (s *Server) Listen() {
-	err := s.rpc.Listen(Port)
+func (s *Server) Listen(addr string) error {
+	listener, err := net.Listen("tcp", "localhost:6532")
+
 	if err != nil {
-		log.Fatalln(err)
+		return err
+	}
+
+	log.Println("== listening for connections at", listener.Addr())
+
+	for {
+		connection, err := listener.Accept()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		log.Println("== accepted connection from", connection.RemoteAddr())
+
+		err = s.HandleConnection(connection)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		err = connection.Close()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+	}
+
+	return nil
+}
+
+func (s *Server) HandleConnection(conn net.Conn) error {
+	reader := json.NewDecoder(conn)
+	writer := json.NewEncoder(conn)
+
+	for {
+		request := &Request{}
+		err := reader.Decode(&request)
+		if err != nil {
+			return err
+		}
+
+		response, err := s.storage.Execute(request)
+		if err != nil {
+			return err
+		}
+
+		err = writer.Encode(response)
+		if err != nil {
+			return err
+		}
 	}
 }

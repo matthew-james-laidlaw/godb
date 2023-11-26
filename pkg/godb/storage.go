@@ -1,44 +1,80 @@
 package godb
 
-// The Engine interface defines the supported methods on the GoDB storage engine.
-type Engine interface {
+import (
+	"errors"
+)
 
-	// The Set method inserts a key-value pair into the underlying storage engine and returns the count of inserted
-	// elements.
-	Set(key KeyType, value ValType) float64
-
-	// The Get method queries the underlying storage engine for a key-value pair and returns one if found. Otherwise,
-	// an empty value is returned.
-	Get(key KeyType) ValType
-
-	// The Del method attempts to delete a key-value pair in the underlying storage engine. If that pair exists, it is
-	// deleted and a deleted-count of 1 is returned. Otherwise, nothing is deleted and a count of 0 is returned.
-	Del(key string) float64
+type StorageEngine struct {
+	storage map[string]string
 }
 
-// The BasicMap type implements the Engine interface backed by a standard Golang map[KeyType]ValType
-type BasicMap struct {
-	store map[KeyType]ValType
+func NewStorageEngine() *StorageEngine {
+	return &StorageEngine{make(map[string]string)}
 }
 
-func NewBasicMap() *BasicMap {
-	store := make(map[KeyType]ValType)
-	return &BasicMap{store}
-}
-
-func (m *BasicMap) Set(key KeyType, val ValType) float64 {
-	m.store[key] = val
-	return 1
-}
-
-func (m *BasicMap) Get(key KeyType) ValType {
-	return m.store[key]
-}
-
-func (m *BasicMap) Del(key KeyType) float64 {
-	if _, ok := m.store[key]; ok {
-		delete(m.store, key)
-		return 1
+func (s *StorageEngine) Execute(request *Request) (*Response, error) {
+	if request.Method == "get" {
+		return s.Get(request)
+	} else if request.Method == "set" {
+		return s.Set(request)
+	} else if request.Method == "del" {
+		return s.Del(request)
+	} else {
+		return nil, errors.New("invalid method")
 	}
-	return 0
+}
+
+func (s *StorageEngine) Get(request *Request) (*Response, error) {
+	if len(request.Params) < 1 {
+		return nil, errors.New("invalid params")
+	}
+
+	_, ok := s.storage[request.Params[0]]
+
+	if ok {
+		response := &Response{
+			Result: s.storage[request.Params[0]],
+		}
+		return response, nil
+	} else {
+		response := &Response{
+			Result: "",
+		}
+		return response, nil
+	}
+}
+
+func (s *StorageEngine) Set(request *Request) (*Response, error) {
+	if len(request.Params) < 2 {
+		return nil, errors.New("invalid params")
+	}
+
+	s.storage[request.Params[0]] = request.Params[1]
+
+	response := &Response{
+		Result: "1",
+	}
+
+	return response, nil
+}
+
+func (s *StorageEngine) Del(request *Request) (*Response, error) {
+	if len(request.Params) < 1 {
+		return nil, errors.New("invalid params")
+	}
+
+	_, ok := s.storage[request.Params[0]]
+
+	if ok {
+		delete(s.storage, request.Params[0])
+		response := &Response{
+			Result: "1",
+		}
+		return response, nil
+	} else {
+		response := &Response{
+			Result: "0",
+		}
+		return response, nil
+	}
 }
