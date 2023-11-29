@@ -46,22 +46,22 @@ go run ./cmd/example
 ### CRUD Operations
 ```
   # insert a key-value pair
-	res, err := client.Set("key", "value")
-	if err != nil {
-		log.Fatalln(err)
-	}
+  res, err := client.Set("key", "value")
+  if err != nil {
+    log.Fatalln(err)
+  }
 
   # retrieve a value from the given key
-	res, err := client.Get("key")
-	if err != nil {
-		log.Fatalln(err)
-	}
+  res, err := client.Get("key")
+  if err != nil {
+    log.Fatalln(err)
+  }
 
   # delete a key-value pair
-	res, err := client.Del("key")
-	if err != nil {
-		log.Fatalln(err)
-	}
+  res, err := client.Del("key")
+  if err != nil {
+    log.Fatalln(err)
+  }
 ```
 
 ### Response Objects
