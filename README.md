@@ -35,6 +35,17 @@ go run ./cmd/example
 
 ## Usage
 
+### Downloading
+Via the command line:
+```
+go get github.com/matthew-james-laidlaw/godb@v1.0.1
+```
+
+### Requiring
+```
+import "github.com/matthew-james-laidlaw/godb/pkg/godb"
+```
+
 ### Creating A Client
 ```
   client, err := godb.NewClient(":8000")
