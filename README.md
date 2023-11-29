@@ -32,3 +32,37 @@ docker run -p 8000:8000 godb
 # and to test an example client after spinning up the server
 go run ./cmd/example
 ```
+
+## Usage
+
+### Creating A Client
+```
+  client, err := godb.NewClient(":8000")
+  if err != nil {
+    log.Fatalln(err)
+  }
+```
+
+### CRUD Operations
+```
+  # insert a key-value pair
+  res, err := client.Set("key", "value")
+  if err != nil {
+    log.Fatalln(err)
+  }
+
+  # retrieve a value from the given key
+  res, err := client.Get("key")
+  if err != nil {
+    log.Fatalln(err)
+  }
+
+  # delete a key-value pair
+  res, err := client.Del("key")
+  if err != nil {
+    log.Fatalln(err)
+  }
+```
+
+### Response Objects
+`Response` objects wrap the response from the database to the client. For `Set` and `Del` operations, the `Result` field of the object will contain the number of records inserted or deleted. For `Get` operations, the `Result` field will contain the value that matches the key used in the operation. If no such key-value pair exists, the record will be empty.
