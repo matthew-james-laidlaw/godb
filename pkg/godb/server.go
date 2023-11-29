@@ -15,7 +15,7 @@ func NewServer() *Server {
 }
 
 func (s *Server) Listen(addr string) error {
-	listener, err := net.Listen("tcp", "localhost:6532")
+	listener, err := net.Listen("tcp", ":8000")
 
 	if err != nil {
 		return err

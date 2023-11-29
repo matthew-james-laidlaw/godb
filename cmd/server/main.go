@@ -8,7 +8,7 @@ import (
 func main() {
 
 	s := godb.NewServer()
-	err := s.Listen("localhost:6532")
+	err := s.Listen(":8000")
 	if err != nil {
 		log.Fatalln(err)
 	}

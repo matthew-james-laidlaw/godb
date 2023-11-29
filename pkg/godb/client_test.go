@@ -11,7 +11,7 @@ func TestClient_EndToEnd(t *testing.T) {
 
 	go func() {
 		s := NewServer()
-		err := s.Listen("localhost:6532")
+		err := s.Listen(":8000")
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -19,7 +19,7 @@ func TestClient_EndToEnd(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	client, err := NewClient("localhost:6532")
+	client, err := NewClient(":8000")
 	if err != nil {
 		t.Error(err)
 	}
