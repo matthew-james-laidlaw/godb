@@ -1,10 +1,11 @@
 package godb
 
 import (
-	"GoDB/pkg/assert"
 	"log"
 	"testing"
 	"time"
+
+	"github.com/matthew-james-laidlaw/godb/pkg/assert"
 )
 
 func TestClient_EndToEnd(t *testing.T) {

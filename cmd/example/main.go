@@ -1,9 +1,10 @@
 package main
 
 import (
-	"GoDB/pkg/godb"
 	"fmt"
 	"log"
+
+	"github.com/matthew-james-laidlaw/godb/pkg/godb"
 )
 
 func main() {

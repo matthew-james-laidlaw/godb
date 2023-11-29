@@ -1,8 +1,9 @@
 package main
 
 import (
-	"GoDB/pkg/godb"
 	"log"
+
+	"github.com/matthew-james-laidlaw/godb/pkg/godb"
 )
 
 func main() {

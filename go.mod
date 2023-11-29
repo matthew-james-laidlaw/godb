@@ -1,3 +1,3 @@
-module GoDB
+module github.com/matthew-james-laidlaw/godb
 
-go 1.21
+go 1.20

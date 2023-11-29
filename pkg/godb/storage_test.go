@@ -1,8 +1,9 @@
 package godb
 
 import (
-	"GoDB/pkg/assert"
 	"testing"
+
+	"github.com/matthew-james-laidlaw/godb/pkg/assert"
 )
 
 func TestStorageEngine_GetNonExistentKey(t *testing.T) {
